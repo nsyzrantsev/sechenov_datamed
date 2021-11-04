@@ -12,9 +12,9 @@ class DdiFact(models.Model):
     id_fact = models.IntegerField(primary_key=True)
     id_task = models.ForeignKey('Task', models.DO_NOTHING, db_column='id_task')
     id_doc = models.IntegerField()
-    sentance_txt = models.TextField()
+    sentence_txt = models.TextField()
     parsing_txt = models.TextField()
-    numb_sentance_in_doc = models.IntegerField()
+    numb_sentence_in_doc = models.IntegerField()
     ddi_type = models.TextField()
 
     class Meta:
@@ -26,9 +26,9 @@ class DdiResult(models.Model):
     id_fact = models.OneToOneField(DdiFact, models.DO_NOTHING, db_column='id_fact', primary_key=True)
     id_task = models.IntegerField()
     id_doc = models.IntegerField()
-    sentance_txt = models.CharField(max_length=1024)
+    sentence_txt = models.CharField(max_length=1024)
     parsing_txt = models.CharField(max_length=1024)
-    numb_sentance_in_doc = models.IntegerField()
+    numb_sentence_in_doc = models.IntegerField()
     ddi_type = models.IntegerField()
 
     class Meta:
@@ -40,9 +40,9 @@ class DdiXFact(models.Model):
     id_fact = models.IntegerField(primary_key=True)
     id_task = models.IntegerField()
     id_doc = models.IntegerField()
-    sentance_txt = models.CharField(max_length=4096)
+    sentence_txt = models.CharField(max_length=4096)
     parsing_txt = models.CharField(max_length=4096)
-    numb_sentance_in_doc = models.IntegerField()
+    numb_sentence_in_doc = models.IntegerField()
     ddi_type = models.CharField(max_length=45)
 
     class Meta:
