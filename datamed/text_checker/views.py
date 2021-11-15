@@ -5,4 +5,4 @@ from .services import *
 
 
 def index(request):
-    return render(request, 'pubmed_bert/index.html', {})
+    return render(request, 'text_checker/index.html', {})
