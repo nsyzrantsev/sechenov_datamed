@@ -3,23 +3,23 @@ import json
 from transformers import BertForTokenClassification
 from transformers import BertTokenizer
 
-# choosing type of processor unit for the torch: cuda or cpu
+# choosing type of processor unit for the torch: CUDA or CPU
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# loading pretrained BERT-NER model from NER5 directory
+# loading pre-trained BERT-NER model from NER5 directory
 model = BertForTokenClassification.from_pretrained('NER5')
-# loading default pretrained tokenizer
+# loading default pre-trained tokenizer
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-# loading pretrained model to device
+# loading pre-trained model to the device
 model.to(device)
 # sets model in evaluation (inference) mode
 model.eval()
 
-# loading tokens labels from json file
+# loading tokens labels from JSON file
 with open('labels_dictionary.json') as json_file:
     labels_dictionary = json.load(json_file)
 
 
-# Function tha splits dataset on the list of the list
+# The function that splits the dataset on the list of the list
 # if the length of a dataset is more than a batch size
 def split_by_batch_size(array, batch_size):
     if len(array) > batch_size:
@@ -62,7 +62,7 @@ def get_prediction_for_batch(batch, model, tokenizer, device):
 
 
 # Checks decoded subword for a token
-# and returns boolean
+# and return boolean
 def word_is_token(subword):
     tokens_list = ['[ C L S ]',
                    '# #',
@@ -73,8 +73,8 @@ def word_is_token(subword):
     return True
 
 
-# Function that gets list of tokens
-# and returns list of decoded words
+# Function that gets the list of tokens
+# and returns the list of decoded words
 def get_decoded_words(tokens_list):
     decoded_words = []
     for token in tokens_list:
@@ -82,9 +82,8 @@ def get_decoded_words(tokens_list):
     return decoded_words
 
 
-# Gets prediction list from bert model
-# and returns predicted labels
-# by labels dictionary
+# Gets prediction list from BERT model
+# and returns predicted labels by labels dictionary
 def get_predicted_labels(label_prediction_list):
     predicted_labels = []
     index_of_max_element = label_prediction_list.index(max(label_prediction_list))
