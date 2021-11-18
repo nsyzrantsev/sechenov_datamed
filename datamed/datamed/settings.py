@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'search_engine',
+    'search_engine.apps.SearchEngineConfig',
     'rest_framework',
-    'pubmed_bert',
+    'text_checker.apps.TextCheckerConfig',
 ]
 
 MIDDLEWARE = [
