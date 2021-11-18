@@ -7,13 +7,13 @@
     <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
     <!-- Load mermaid.min.css -->
     <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet">
-    <title>Datamed</title>
+    <title>Search</title>
 </head>
 <body>
     <!-- Search field for the searching in the database -->
-    <form action="{% url 'index' %}" method="get">
+    <form action="{% url 'search_page' %}" method="get">
         <label for="site-search">Поиск в базе данных:</label>
-        <input name="q" type="search" id="site-search" placeholder="Введите запрос...">
+        <input name="text" type="search" id="site-search" placeholder="Введите запрос...">
         <button>Найти</button>
     </form>
     <div id="wrapper"></div>
