@@ -1,7 +1,7 @@
 from Bio import Entrez, Medline
 
 
-def get_xml_list(query_text, articles_number, database_name,):
+def get_xml_list(query_text, articles_number, database_name):
     Entrez.email = 'some@email.com'
     # Searches and retrieves primary IDs
     handle = Entrez.esearch(
@@ -20,4 +20,3 @@ def get_xml_list(query_text, articles_number, database_name,):
     for article in articles_xml:
         xml.append(article)
     return xml
-
