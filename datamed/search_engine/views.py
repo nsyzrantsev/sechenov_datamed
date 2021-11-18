@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import json
-from .services import *
+from .services import get_articles_from_db
 
 
 def index(request):
@@ -10,4 +10,4 @@ def index(request):
         if query is not None:
             data_list = get_articles_from_db(query)
             html_context = {'data_list': json.dumps(data_list)}
-    return render(request, 'search_engine/index.html', html_context)
+    return render(request, 'search_engine/search_with_grid.html', html_context)
