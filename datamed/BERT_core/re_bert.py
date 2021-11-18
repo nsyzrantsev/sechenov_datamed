@@ -4,8 +4,8 @@ from bert import Bert
 # BERT_core-RE model for finding
 # interactions between drugs
 class ReBert(Bert):
-    def __init__(self, device, model, tokenizer, labels_dictionary, betch_size):
-        super().__init__(device, model, tokenizer, labels_dictionary, betch_size)
+    def __init__(self, device, model, tokenizer, labels_dictionary, batch_size):
+        super().__init__(device, model, tokenizer, labels_dictionary, batch_size)
 
     # The function that splits the dataset on the list of the list
     # if the length of a dataset is more than a batch size
