@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text checker</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'text_checker/text_area.css' %}">
+</head>
+<body>
+    <form action="{% url 'check_page' %}" method="get">
+        <label for="textBox"></label>
+            <textarea class="textarea" id="textBox" name="text" rows="20" cols="100" placeholder="Введите текст для предсказания..."></textarea>
+        <input type="submit" value="Submit">
+    </form>
+    <table border="1">
+        <caption><h2>Результаты предсказания</h2></caption>
+        <tr>
+            <th>Изначальный текст</th>
+            <th>Текст после обработки</th>
+            <th>Тип DDI</th>
+        </tr>
+        {% for sentence in prediction %}
+            <tr>
+                {% for key, value in sentence.items %}
+                    <td >{{value}}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
