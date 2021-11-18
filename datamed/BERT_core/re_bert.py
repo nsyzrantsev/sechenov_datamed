@@ -1,9 +1,9 @@
-from BertModel import BertModel
+from bert import Bert
 
 
-# BERT-RE model for finding
+# BERT_core-RE model for finding
 # interactions between drugs
-class ReBertModel(BertModel):
+class ReBert(Bert):
     def __init__(self, device, model, tokenizer, labels_dictionary, betch_size):
         super().__init__(device, model, tokenizer, labels_dictionary, betch_size)
 

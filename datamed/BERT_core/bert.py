@@ -1,4 +1,4 @@
-class BertModel:
+class Bert:
     def __init__(self, device, model, tokenizer, labels_dictionary, batch_size=10):
         self.device = device
         self.model = model

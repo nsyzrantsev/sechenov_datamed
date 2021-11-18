@@ -1,9 +1,9 @@
-from BertModel import BertModel
+from bert import Bert
 
 
 # NER Bert model for finding
 # drugs in texts
-class NerBertModel(BertModel):
+class NerBert(Bert):
     def __init__(self, device, model, tokenizer, labels_dictionary, batch_size):
         super().__init__(device, model, tokenizer, labels_dictionary, batch_size)
 
@@ -59,7 +59,7 @@ class NerBertModel(BertModel):
             decoded_words.append(self.tokenizer.decode(token))
         return decoded_words
 
-    # Gets prediction list from BERT model
+    # Gets prediction list from BERT_core model
     # and returns predicted labels by labels dictionary
     def get_predicted_labels(self, label_predictions):
         return super().get_predicted_class(label_predictions)
