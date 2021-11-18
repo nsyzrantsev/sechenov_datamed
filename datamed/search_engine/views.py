@@ -1,11 +1,10 @@
 from django.shortcuts import render
-from .models import *
 import json
 from .services import *
 
 
 def index(request):
-    query = request.GET.get('q')
+    query = request.GET.get('text')
     html_context = dict()
     if request.method == "GET":
         if query is not None:
