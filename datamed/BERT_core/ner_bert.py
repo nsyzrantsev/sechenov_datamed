@@ -42,7 +42,7 @@ class NerBert(Bert):
 
     # Checks decoded subword for a token
     # and return boolean
-    def word_is_not_token(self, subword):
+    def is_not_token(self, subword):
         tokens_list = ['[ C L S ]',
                        '# #',
                        '[ S E P ]',
@@ -69,7 +69,7 @@ class NerBert(Bert):
     def tokens_filter(self, decoded_words, predicted_labels):
         labels = []
         for subword, label in zip(decoded_words, predicted_labels):
-            if self.word_is_not_token(subword) is True:
+            if self.is_not_token(subword) is True:
                 # Changes name of token to readable
                 # Example: B-DRUG -> DRUG
                 if label != '-':
@@ -78,7 +78,7 @@ class NerBert(Bert):
         return labels
 
     # Import predicted tokens in sentences
-    def import_tokens(self, sentences, tokens):
+    def import_tokens_in_sentences(self, sentences, tokens):
         sentences_with_tokens = []
         for i, sentence in enumerate(sentences):
             new_sentence = []
