@@ -3,5 +3,5 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('checktext/', index, name='index'),
+    path('', index, name='check_page'),  # http://127.0.0.1:8000/text_check/
 ]
