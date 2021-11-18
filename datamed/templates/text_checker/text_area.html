@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <!-- Form for the text input -->
+    <div class="textarea" >
+        <form action="{% url 'check_page' %}" method="get">
+            <label for="textBox"></label>
+                <textarea id="textBox" name="text" rows="10" cols="80" placeholder="Введите текст..."></textarea>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <!-- Grid.js table with BERT results -->
+    <div id="wrapper"></div>
+    <script type="text/javascript">
+        let list = {{prediction|safe}};
+    </script>
+    <script type="text/javascript" src="{% static 'text_checker/js/table_for_db.js' %}"></script>
+{% endblock %}

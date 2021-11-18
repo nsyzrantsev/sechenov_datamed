@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <meta charset="UTF-8">
+    <!-- Load gridjs.umd.js -->
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <!-- Load mermaid.min.css -->
+    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet">
+    <!-- Import style for page header -->
+    <link rel="stylesheet" type="text/css" href="{% static 'text_checker/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'text_checker/css/Navigation-Clean.css' %}">
+    <!-- Import style for search bar -->
+    <link rel="stylesheet" type="text/css" href="{% static 'search_engine/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'search_engine/css/Pretty-Search-Form.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean">
+        <div class="container"><a class="navbar-brand" href="{% url 'search_page' %}">Datamed</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'check_page' %}">Анализ текста</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'search_page' %}">Поиск в базе данных</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <script src="{% static 'text_checker/js/bootstrap.min.js' %}"></script>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
