@@ -1,3 +1,13 @@
-textarea {
-    text-align: center;
+.textarea-container {
+    position: relative;
+    top: 50%;
+    left: 20%;
+}
+.textarea-container textarea {
+    width: 50%;
+    height: 50%;
+    box-sizing: border-box;
+}
+.textarea-container button {
+    position: absolute;
 }
