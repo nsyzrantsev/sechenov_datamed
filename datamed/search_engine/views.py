@@ -1,13 +1,20 @@
 from django.shortcuts import render
 import json
 from .services import get_articles_from_db
+from .forms import AddSearchForm
 
 
 def index(request):
-    query = request.GET.get('text')
-    html_context = dict()
     if request.method == "GET":
-        if query is not None:
+        form = AddSearchForm(request.GET)
+        if form.is_valid():
+            query = form['user_query'].value()
             data_list = get_articles_from_db(query)
-            html_context = {'data_list': json.dumps(data_list)}
-    return render(request, 'search_engine/search_with_grid.html', html_context)
+            return render(request, 'search_engine/search_with_grid.html',
+                          {'form': form,
+                           'title': 'Поиск в базе данных',
+                           'db_data_list': json.dumps(data_list)})
+    else:
+        form = AddSearchForm()
+    return render(request, 'search_engine/search_with_grid.html', {'form': form,
+                                                                   'title': 'Поиск в базе данных'})
