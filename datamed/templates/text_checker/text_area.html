@@ -4,13 +4,13 @@
 
 {% block content %}
     <!-- Form for the text input -->
-    <div class="textarea" >
         <form action="{% url 'check_page' %}" method="get">
-            <label for="textBox"></label>
-                <textarea id="textBox" name="text" rows="10" cols="80" placeholder="Введите текст..."></textarea>
-            <input type="submit" value="Submit">
+            {% csrf_token %}
+            <div class="textarea-container">
+                {{ form.user_text }}
+                <input type="submit" value="Submit">
+            </div>
         </form>
-    </div>
     <!-- Grid.js table with BERT results -->
     <div id="wrapper"></div>
     <script type="text/javascript">
