@@ -41,7 +41,7 @@ def re_initialization():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     path_to_bert_re = str(path.join(path_to_BERT, 'Bert_med_re_v5_cont_ep_3'))
     model = BertForSequenceClassification.from_pretrained(path_to_bert_re)
-    path_to_medtokenizer = str(path.join(path_to_BERT,'MEDtokenizer'))
+    path_to_medtokenizer = str(path.join(path_to_BERT, 'MEDtokenizer'))
     tokenizer = BertTokenizer.from_pretrained(path_to_medtokenizer)
     path_to_relabels = str(path.join(path_to_BERT, 'RElabels.json'))
     with open(path_to_relabels) as json_file:
@@ -51,7 +51,7 @@ def re_initialization():
     return device, model, tokenizer, labels_dictionary
 
 
-# return result list with predicted labels and interactions
+# Return result list of texts with predicted labels and interactions
 def result_list(sentences, NER_sentences, RE_interactions):
     answer_list = []
     for i, sentence in enumerate(sentences):
