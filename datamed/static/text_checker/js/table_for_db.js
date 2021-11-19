@@ -13,9 +13,6 @@ new gridjs.Grid({
             name:'Тип DDI'
         },
     ],
-    pagination: true,
-    search: true,
-    sort: true,
     resizable: true,
     data: list
 }).render(document.getElementById("wrapper"));
