@@ -5,21 +5,27 @@ from transformers import BertTokenizer
 from ner_bert import NerBert
 from re_bert import ReBert
 from os import path
+from nltk import tokenize
+import re
+
+import nltk
+nltk.download('punkt')
 
 path_to_BERT = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'BERT_core')
 
 
-def main(input_sentence):
+def main(text):
     batch_size = 10
-    sentence = [' '.join(input_sentence.split())]
+    # split text into sentences and add whitespace between words and symbols
+    sentences = [' '.join(re.findall(r"[A-Za-z@#]+|\S", sentence)) for sentence in tokenize.sent_tokenize(text)]
     initialized_ner = ner_initialization()
     initialized_re = re_initialization()
-    NER_model = NerBert(*initialized_ner, batch_size)
-    NER_tokens = NER_model.predict_by_bert_ner(sentence)
-    NER_sentences = NER_model.import_tokens_in_sentences(sentence, NER_tokens)
-    RE_model = ReBert(*initialized_re, batch_size)
-    RE_interactions = RE_model.predict_by_bert_re(NER_sentences)
-    return result_list(sentence, NER_sentences, RE_interactions)
+    ner_model = NerBert(*initialized_ner, batch_size)
+    ner_tokens_list = ner_model.predict_by_bert_ner(sentences)
+    sentences_after_ner, tokens_count_list = ner_model.import_tokens_into_sentences(sentences, ner_tokens_list)
+    re_model = ReBert(*initialized_re, batch_size)
+    re_interaction = re_model.predict_by_bert_re(sentences_after_ner)
+    return result_list(sentences, sentences_after_ner, tokens_count_list, re_interaction)
 
 
 # NER-BERT initialization
@@ -52,13 +58,16 @@ def re_initialization():
 
 
 # Return result list of texts with predicted labels and interactions
-def result_list(sentences, NER_sentences, RE_interactions):
+def result_list(sentences_before_ner, sentences_after_ner, tokens_count, re_interactions):
     answer_list = []
-    for i, sentence in enumerate(sentences):
-        sentence_dict = {
-            'text_before_bert': sentence,
-            'text_after_bert': NER_sentences[i],
-            'ddi': RE_interactions[i]
-        }
-        answer_list.append(sentence_dict)
+    for i, sentence in enumerate(sentences_before_ner):
+        if tokens_count[i] > 0:
+            sentence_dict = {
+                'text_before_bert': sentence,
+                'text_after_bert': sentences_after_ner[i],
+                'ddi': re_interactions[i],
+                'sentence_number': i+1
+            }
+            answer_list.append(sentence_dict)
     return answer_list
+
