@@ -9,17 +9,17 @@ from os import path
 path_to_BERT = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'BERT_core')
 
 
-def main(texts):
+def main(input_sentence):
     batch_size = 10
-    sentences = [' '.join(string.split()) for string in texts]
+    sentence = [' '.join(input_sentence.split())]
     initialized_ner = ner_initialization()
     initialized_re = re_initialization()
     NER_model = NerBert(*initialized_ner, batch_size)
-    NER_tokens = NER_model.predict_by_bert_ner(sentences)
-    NER_sentences = NER_model.import_tokens_in_sentences(sentences, NER_tokens)
+    NER_tokens = NER_model.predict_by_bert_ner(sentence)
+    NER_sentences = NER_model.import_tokens_in_sentences(sentence, NER_tokens)
     RE_model = ReBert(*initialized_re, batch_size)
     RE_interactions = RE_model.predict_by_bert_re(NER_sentences)
-    return result_list(sentences, NER_sentences, RE_interactions)
+    return result_list(sentence, NER_sentences, RE_interactions)
 
 
 # NER-BERT initialization
