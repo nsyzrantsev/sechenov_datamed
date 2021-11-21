@@ -35,14 +35,14 @@ class NerBert(Bert):
         result_prediction = []
         for i, label_predictions in enumerate(prediction_list):
             decoded_words = self.get_decoded_words(tokenizer_dict['input_ids'].tolist()[i])
-            predicted_labels = self.get_predicted_labels(label_predictions)
-            labels = self.tokens_filter(decoded_words, predicted_labels)
-            result_prediction.append(labels)
+            predicted_tokens = self.get_predicted_tokens(label_predictions)
+            tokens = self.tokens_filter(decoded_words, predicted_tokens)
+            result_prediction.append(tokens)
         return result_prediction
 
     # Checks decoded subword for a token
     # and return boolean
-    def is_not_token(self, subword):
+    def is_not_special_token(self, subword):
         tokens_list = ['[ C L S ]',
                        '# #',
                        '[ S E P ]',
@@ -61,31 +61,35 @@ class NerBert(Bert):
 
     # Gets prediction list from BERT_core model
     # and returns predicted labels by labels dictionary
-    def get_predicted_labels(self, label_predictions):
-        return super().get_predicted_class(label_predictions)
+    def get_predicted_tokens(self, token_predictions):
+        return super().get_predicted_class(token_predictions)
 
     # Return lists of words without tokens,
     # such as: [ C L S ], # #, [ S E P ], [ P A D ]
-    def tokens_filter(self, decoded_words, predicted_labels):
-        labels = []
-        for subword, label in zip(decoded_words, predicted_labels):
-            if self.is_not_token(subword) is True:
+    def tokens_filter(self, decoded_words, predicted_tokens):
+        tokens = []
+        for subword, token in zip(decoded_words, predicted_tokens):
+            if self.is_not_special_token(subword):
                 # Changes name of token to readable
                 # Example: B-DRUG -> DRUG
-                if label != '-':
-                    label = label[2:]
-                labels.append(label)
-        return labels
+                if token != '-':
+                    token = token[2:]
+                tokens.append(token)
+        return tokens
 
     # Import predicted tokens in sentences
-    def import_tokens_in_sentences(self, sentences, tokens):
+    def import_tokens_into_sentences(self, sentences, tokens_list):
         sentences_with_tokens = []
+        tokens_count_list = []
         for i, sentence in enumerate(sentences):
             new_sentence = []
+            tokens_count = 0
             for j, word in enumerate(sentence.split()):
-                if tokens[i][j] != '-':
-                    new_sentence.append(f'[{word}<{tokens[i][j]}>]')
+                if tokens_list[i][j] != '-':
+                    tokens_count += 1
+                    new_sentence.append(f'[{word} --- {tokens_list[i][j]}]')
                 else:
                     new_sentence.append(word)
             sentences_with_tokens.append(' '.join(new_sentence))
-        return sentences_with_tokens
+            tokens_count_list.append(tokens_count)
+        return sentences_with_tokens, tokens_count_list
