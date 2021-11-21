@@ -24,7 +24,7 @@ def save_articles_in_db(query):
                 query_text=query)
     task.save()
     for article in articles:
-        article = add_predicted_values(article)
+        article = add_bert_prediction(article)
         if not DdiFact.objects.filter(id_doc=article.get('PMID')).exists():
             ddi_fact = DdiFact(id_task=task,
                                id_doc=article.get('PMID'),
@@ -75,7 +75,7 @@ def get_articles_parameters(xml_list, parameters):
 # Predict tokens for words in articles texts,
 # drug-drug interaction
 # and add it to article dict
-def add_predicted_values(article):
+def add_bert_prediction(article):
     prediction = bert_prediction(article.get('AB'))
     article['parsing_txt'] = prediction[0]['text_after_bert']
     article['ddi_type'] = prediction[0]['ddi']
