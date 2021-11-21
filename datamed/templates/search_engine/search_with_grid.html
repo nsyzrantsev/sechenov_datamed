@@ -4,7 +4,7 @@
 
 {% block content %}
     <!-- Search field for the searching in the database -->
-    <form class="search-form" action="{% url 'search_page' %}" method="get">
+    <form class="search-form" action="{% url 'search_page' %}" method="post">
         {% csrf_token %}
         <div class="input-group">
             <span class="input-group-text">
