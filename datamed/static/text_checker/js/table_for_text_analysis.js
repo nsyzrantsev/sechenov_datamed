@@ -17,6 +17,9 @@ new gridjs.Grid({
             name: 'Номер предложения'
         }
     ],
+    pagination: true,
+    search: true,
+    sort: true,
     resizable: true,
     data: list
 }).render(document.getElementById("wrapper"));
