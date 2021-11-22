@@ -45,7 +45,7 @@ class DdiXFact(models.Model):
 
 
 class DrugLink(models.Model):
-    id_fact = models.ForeignKey(DdiFact, on_delete=models.CASCADE, db_column='id_fact')
+    id_fact = models.OneToOneField('DdiFact', on_delete=models.CASCADE, db_column='id_fact', primary_key=True)
     drug_name = models.TextField()
 
     class Meta:
