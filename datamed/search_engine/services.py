@@ -17,16 +17,16 @@ def get_articles_from_db(query):
 
 
 # Save BERT predictions in DdiFact table
-def save_articles_in_db(query):
-    articles = get_xml_list(query, 1, 'pubmed')
-    # articles = get_articles_parameters(xml_list, ['PMID', 'AB'])
+def save_articles_in_db(query, articles_num=5):
+    articles = get_xml_list(query, articles_num+20, 'pubmed')
     task = Task(source_id=Source.objects.get(source_id=1),
                 query_text=query)
     task.save()
     for article in articles:
-        if article.get('AB') is not None:
-            article_after_bert = bert_prediction(article.get('AB'))
-            if not DdiFact.objects.filter(id_doc=article.get('PMID')).exists():
+        if article.get('AB') is not None and article.get('PMID') is not None:
+            if articles_num > 0 and not DdiFact.objects.filter(id_doc=article.get('PMID')).exists():
+                article_after_bert = bert_prediction(article.get('AB'))
+                articles_num -= 1  # Counter of the number of articles actually found
                 for sentence in article_after_bert:
                     ddi_fact = DdiFact(id_task=task,
                                        id_doc=article.get('PMID'),
