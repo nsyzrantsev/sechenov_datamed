@@ -4,14 +4,16 @@
 
 {% block content %}
     <!-- Search field for the searching in the database -->
-    <form class="search-form" action="{% url 'search_page' %}" method="post">
+    <form class="search-form" action="{% url 'search_pubmed_page' %}" method="post">
         {% csrf_token %}
         <div class="input-group">
             <span class="input-group-text">
                 <i class="fa fa-search"></i>
             </span>
             {{ form.user_query }}
-            {{ form.database_type }}
+            <div class="integer-form">
+                {{ form.articles_number }}
+            </div>
             <button class="btn btn-light">Найти</button>
         </div>
     </form>
