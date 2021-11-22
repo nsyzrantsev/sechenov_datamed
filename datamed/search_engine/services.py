@@ -1,4 +1,4 @@
-from .models import DdiXFact, DdiFact, Task, Source, DrugLink
+from .models import DdiFact, Task, Source, DrugLink
 from Bio import Entrez, Medline
 import sys
 
