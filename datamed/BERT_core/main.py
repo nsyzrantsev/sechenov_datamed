@@ -63,8 +63,8 @@ def preparation_for_prediction(text, batch_size):
         cleared_sentence = ' '.join(re.findall(r"[A-Za-z@#]+|\S", sentence))
         batch.append(cleared_sentence)
         if len(batch) > batch_size:
-            batch = []
             batch_list.append(batch)
+            batch = []
     if len(batch) != 0:
         batch_list.append(batch)
     return batch_list
