@@ -15,17 +15,14 @@ path_to_BERT = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'BE
 
 
 def main(text):
-    batch_size = 10
-    # split text into sentences and add whitespace between words and symbols
-    sentences = [' '.join(re.findall(r"[A-Za-z@#]+|\S", sentence)) for sentence in tokenize.sent_tokenize(text)]
+    sentences = preparation_for_prediction(text, batch_size=10)
     initialized_ner = ner_initialization()
     initialized_re = re_initialization()
-    ner_model = NerBert(*initialized_ner, batch_size)
-    ner_tokens_list = ner_model.predict_by_bert_ner(sentences)
-    sentences_after_ner, tokens_count_list = ner_model.import_tokens_into_sentences(sentences, ner_tokens_list)
-    re_model = ReBert(*initialized_re, batch_size)
-    re_interaction = re_model.predict_by_bert_re(sentences_after_ner)
-    return result_list(sentences, sentences_after_ner, tokens_count_list, re_interaction)
+    ner_model = NerBert(*initialized_ner)
+    sentences_after_ner, tokens_count_list, drugs_list = ner_model.get_predictions(sentences)
+    re_model = ReBert(*initialized_re)
+    re_interaction = re_model.get_predictions(sentences_after_ner)
+    return result_list(sentences, sentences_after_ner, tokens_count_list, re_interaction, drugs_list)
 
 
 # NER-BERT initialization
@@ -57,17 +54,34 @@ def re_initialization():
     return device, model, tokenizer, labels_dictionary
 
 
-# Return result list of texts with predicted labels and interactions
-def result_list(sentences_before_ner, sentences_after_ner, tokens_count, re_interactions):
-    answer_list = []
-    for i, sentence in enumerate(sentences_before_ner):
-        if tokens_count[i] > 0:
-            sentence_dict = {
-                'text_before_bert': sentence,
-                'text_after_bert': sentences_after_ner[i],
-                'ddi': re_interactions[i],
-                'sentence_number': i+1
-            }
-            answer_list.append(sentence_dict)
-    return answer_list
+# The function that returns list of batched sentences
+# with whitespaces between words
+def preparation_for_prediction(text, batch_size):
+    batch_list = []
+    batch = []
+    for sentence in tokenize.sent_tokenize(text):
+        cleared_sentence = ' '.join(re.findall(r"[A-Za-z@#]+|\S", sentence))
+        batch.append(cleared_sentence)
+        if len(batch) > batch_size:
+            batch = []
+            batch_list.append(batch)
+    if len(batch) != 0:
+        batch_list.append(batch)
+    return batch_list
 
+
+# Return result list of texts with predicted labels and interactions
+def result_list(sentences_before_ner, sentences_after_ner, tokens_count, re_interactions, drugs_list):
+    answer_list = []
+    for i, batch in enumerate(sentences_before_ner):
+        for j, sentence in enumerate(batch):
+            if tokens_count[i][j] > 0:
+                sentence_dict = {
+                    'text_before_bert': sentence,
+                    'text_after_bert': sentences_after_ner[i][j],
+                    'ddi': re_interactions[i][j],
+                    'sentence_number': j + 1,
+                    'drugs': drugs_list[i][j]
+                }
+                answer_list.append(sentence_dict)
+    return answer_list
