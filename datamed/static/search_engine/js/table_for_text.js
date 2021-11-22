@@ -7,16 +7,20 @@ new gridjs.Grid({
                 gridjs.html(`<a href="https://pubmed.ncbi.nlm.nih.gov/${cell}/" target="_blank">${cell}</a>`)
         },
         {
-            id:'sentence_txt',
-            name:'Текст предложения'
+            id: 'sentence_txt',
+            name: 'Текст до обработки'
         },
         {
-            id:'ddi_type',
-            name:'Тип DDI'
+            id: 'parsing_txt',
+            name: 'Текста после обработки'
+        },
+        {
+            id: 'ddi_type',
+            name: 'Тип DDI'
         },
         {
             id: 'numb_sentence_in_doc',
-            name:'Номер предложения в статье'
+            name: 'Номер предложения в статье'
         },
         {
             name: 'Скачать статью',
