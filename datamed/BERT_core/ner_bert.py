@@ -4,22 +4,23 @@ from bert import Bert
 # NER Bert model for finding
 # drugs in texts
 class NerBert(Bert):
-    def __init__(self, device, model, tokenizer, labels_dictionary, batch_size):
-        super().__init__(device, model, tokenizer, labels_dictionary, batch_size)
-
-    # The function that splits the dataset on the list of the list
-    # if the length of a dataset is more than a batch size
-    def split_by_batch_size(self, array):
-        return super().split_by_batch_size(array)
+    def __init__(self, device, model, tokenizer, labels_dictionary):
+        super().__init__(device, model, tokenizer, labels_dictionary)
 
     # Predict function for all texts
-    def predict_by_bert_ner(self, texts_array):
-        batched_array = self.split_by_batch_size(texts_array)
-        predictions = []
+    def get_predictions(self, batched_array):
+        predicted_sentences = []
+        tokens_count_list = []
+        drugs_in_sentences = []
         for batch in batched_array:
-            prediction = self.get_prediction_for_batch(batch)
-            predictions.extend(prediction)
-        return predictions
+            tokens_for_sentences = self.get_prediction_for_batch(batch)
+            sentences_with_tokens, \
+            tokens_count, \
+            drugs_list = self.import_tokens_into_sentences(batch, tokens_for_sentences)
+            predicted_sentences.append(sentences_with_tokens)
+            tokens_count_list.append(tokens_count)
+            drugs_in_sentences.append(drugs_list)
+        return predicted_sentences, tokens_count_list, drugs_in_sentences
 
     # Predict labels for the one batch
     def get_prediction_for_batch(self, batch):
@@ -77,19 +78,24 @@ class NerBert(Bert):
                 tokens.append(token)
         return tokens
 
-    # Import predicted tokens in sentences
+    # Import predicted tokens in sentences and returns
     def import_tokens_into_sentences(self, sentences, tokens_list):
         sentences_with_tokens = []
         tokens_count_list = []
+        drugs_in_text = []
         for i, sentence in enumerate(sentences):
             new_sentence = []
             tokens_count = 0
+            drugs_in_sentence = []
             for j, word in enumerate(sentence.split()):
                 if tokens_list[i][j] != '-':
                     tokens_count += 1
+                    if tokens_list[i][j] == 'DRUG':
+                        drugs_in_sentence.append(word)
                     new_sentence.append(f'[{word} --- {tokens_list[i][j]}]')
                 else:
                     new_sentence.append(word)
+            drugs_in_text.append(drugs_in_sentence)
             sentences_with_tokens.append(' '.join(new_sentence))
             tokens_count_list.append(tokens_count)
-        return sentences_with_tokens, tokens_count_list
+        return sentences_with_tokens, tokens_count_list, drugs_in_text

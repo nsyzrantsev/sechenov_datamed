@@ -4,20 +4,14 @@ from bert import Bert
 # BERT_core-RE model for finding
 # interactions between drugs
 class ReBert(Bert):
-    def __init__(self, device, model, tokenizer, labels_dictionary, batch_size):
-        super().__init__(device, model, tokenizer, labels_dictionary, batch_size)
+    def __init__(self, device, model, tokenizer, labels_dictionary):
+        super().__init__(device, model, tokenizer, labels_dictionary)
 
-    # The function that splits the dataset on the list of the list
-    # if the length of a dataset is more than a batch size
-    def split_by_batch_size(self, array):
-        return super().split_by_batch_size(array)
-
-    def predict_by_bert_re(self, ner_sentences):
-        batched_array = self.split_by_batch_size(ner_sentences)
+    def get_predictions(self, batched_array):
         predictions = []
         for batch in batched_array:
             prediction = self.get_prediction_for_batch(batch)
-            predictions.extend(prediction)
+            predictions.append(prediction)
         return predictions
 
     # Return prediction for the batch
