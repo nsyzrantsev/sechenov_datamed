@@ -7,3 +7,11 @@ class AddSearchForm(forms.Form):
             'class': 'form-control',
             'placeholder': 'Введите запрос...'
         }))
+    articles_number = forms.IntegerField(
+        min_value=0,
+        max_value=10,
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите число статей...'
+        }))
