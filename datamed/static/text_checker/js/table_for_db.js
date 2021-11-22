@@ -12,6 +12,10 @@ new gridjs.Grid({
             id:'ddi',
             name:'Тип DDI'
         },
+        {
+            id:'sentence_number',
+            name: 'Номер предложения'
+        }
     ],
     resizable: true,
     data: list
