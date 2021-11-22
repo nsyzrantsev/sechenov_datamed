@@ -1,4 +1,4 @@
-from .models import DdiXFact, DdiFact, Task, Source
+from .models import DdiXFact, DdiFact, Task, Source, DrugLink
 from Bio import Entrez, Medline
 import sys
 
@@ -18,21 +18,28 @@ def get_articles_from_db(query):
 
 # Save BERT predictions in DdiFact table
 def save_articles_in_db(query):
-    xml_list = get_xml_list(query, 1, 'pubmed')
-    articles = get_articles_parameters(xml_list, ['PMID', 'AB'])
+    articles = get_xml_list(query, 1, 'pubmed')
+    # articles = get_articles_parameters(xml_list, ['PMID', 'AB'])
     task = Task(source_id=Source.objects.get(source_id=1),
                 query_text=query)
     task.save()
     for article in articles:
-        article = add_bert_prediction(article)
-        if not DdiFact.objects.filter(id_doc=article.get('PMID')).exists():
-            ddi_fact = DdiFact(id_task=task,
-                               id_doc=article.get('PMID'),
-                               sentence_txt=article.get('AB'),
-                               parsing_txt=article.get('parsing_txt'),
-                               numb_sentence_in_doc=0,
-                               ddi_type=article.get('ddi_type'))
-            ddi_fact.save()
+        if article.get('AB') is not None:
+            article_after_bert = bert_prediction(article.get('AB'))
+            if not DdiFact.objects.filter(id_doc=article.get('PMID')).exists():
+                for sentence in article_after_bert:
+                    ddi_fact = DdiFact(id_task=task,
+                                       id_doc=article.get('PMID'),
+                                       sentence_txt=sentence.get('text_before_bert'),
+                                       parsing_txt=sentence.get('text_after_bert'),
+                                       numb_sentence_in_doc=sentence.get('sentence_number'),
+                                       ddi_type=sentence.get('ddi'))
+                    ddi_fact.save()
+                    if len(sentence.get('drugs')) > 0:
+                        for drug in sentence.get('drugs'):
+                            drug_link = DrugLink(id_fact=ddi_fact,
+                                                 drug_name=drug)
+                            drug_link.save()
 
 
 # Return xml list of articles by user query
@@ -70,13 +77,3 @@ def get_articles_parameters(xml_list, parameters):
                 return []
         articles.append(article)
     return articles
-
-
-# Predict tokens for words in articles texts,
-# drug-drug interaction
-# and add it to article dict
-def add_bert_prediction(article):
-    prediction = bert_prediction(article.get('AB'))
-    article['parsing_txt'] = prediction[0]['text_after_bert']
-    article['ddi_type'] = prediction[0]['ddi']
-    return article
