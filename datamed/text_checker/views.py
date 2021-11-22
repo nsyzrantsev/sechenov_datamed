@@ -25,6 +25,6 @@ class TextareaView(FormView):
             form = self.textarea_form(request.GET)
             if form.is_valid():
                 query = form['user_text'].value()
-                prediction = bert_prediction([query])
+                prediction = bert_prediction(query)
                 return render(request, self.template_name, {'form': form, 'prediction': json.dumps(prediction)})
         return render(request, self.template_name, {'form': self.textarea_form})
