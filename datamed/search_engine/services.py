@@ -18,7 +18,7 @@ def get_articles_from_db(query):
 
 # Save BERT predictions in DdiFact table
 def save_articles_in_db(query, articles_num=5):
-    articles = get_xml_list(query, articles_num+20, 'pubmed')
+    articles = get_xml_list(query, articles_num + 20, 'pubmed')
     task = Task(source_id=Source.objects.get(source_id=1),
                 query_text=query)
     task.save()

@@ -28,12 +28,8 @@ class SearchPubmedView(FormView):
         form = self.search_form(request.POST)
         if form.is_valid():
             query_text = form['user_query'].value()
-            articles_number = form['articles_number'].value()
             # Check is a number field is empty or not
-            if articles_number != '':
-                save_articles_in_db(query_text, int(articles_number))
-            else:
-                save_articles_in_db(query_text)
+            save_articles_in_db(query_text)
             data_list = get_articles_from_db(query_text)
             return render(request, self.template_name,
                           {'form': form,
